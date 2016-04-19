@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+@Junior Software, DarkPlace (c) 2014
+Jangan merubah dan melakukan editing terhadap pembuat (author)
+pada file ini. Boleh digunakan sebagai Referensi dan free untuk share
+ 
+indrakodar.kodar@gmail.com - (c)Wednesday - 13 January 2016
+Last Update : 
+
+-->
+
+<!--Info Konfigurasi TRACE, INFO, WARN, DEBUG, ERROR-->
+<Configuration status="INFO" name="KonfigurasiLog"> 
+    <Properties>
+        <!--Seperti Variabel pada umumnya, jika digunakan harus dimulai dengan ${VAR}-->
+        <Property name="LOG_DIR">logs</Property>
+        <Property name="LOG_FILE_NAME">logApp.log</Property>
+        <Property name="ARCHIVE">${LOG_DIR}/archive</Property>
+        <Property name="PATTERN">%-5level %d{dd-MM-yyyy hh:ss:mm.SSS} [%t] %c:%M(%L): %m%n</Property>
+    </Properties>
+    <Appenders> <!--Konfigurasi untuk logger-->
+        <!--Konfig Console untuk Sout-->
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout pattern="${PATTERN}"/>
+        </Console>
+        <!--        Menyimpan ke file dengan beberapa parameter yang tersedia
+        Dibawah ini artinya File disimpan pada file LogApp.log akan diterusken
+        jika data sudah memenuhi 1 MB atau Kondisi interval 6 Jam sekali-->
+        <RollingFile name="ToFile"
+                     fileName="${LOG_DIR}/${LOG_FILE_NAME}"
+                     filePattern="${ARCHIVE}/${LOG_FILE_NAME}.%d{yyyy-MM-dd-hh-mm}.log.gz">
+            <PatternLayout pattern="${PATTERN}"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="6" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="20 MB" />
+            </Policies>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <!--Disini mengaktifkan fungsi logger itu sendiri-->
+        <Root level="INFO">
+            <AppenderRef ref="ToFile"/> <!--Tulis data log ke file-->
+            <AppenderRef ref="STDOUT"/> <!--Tampilkan data log ke ComanndLine-->
+        </Root>
+        <Logger name="com.andrew_flower.example.Log4j2Example1" level="TRACE" additivity="false">
+            <AppenderRef ref="STDOUT"/>
+        </Logger>
+        <Logger name="com.andrew_flower.example.Other" level="ERROR" additivity="true"/>
+    </Loggers>
+</Configuration>
